@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venisha Trivedi · AI Agents</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/three@0.167.1/build/three.min.js"></script>
+  <script src="https://cdn.skypack.dev/gsap@3.12.5"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-hero: clamp(3rem, 7vw, 8rem);
+      --space-16: 4rem;
+      --color-primary: #01696f;
+      --transition-interactive: 180ms cubic-bezier(0.16,1,0.3,1);
+    }
+    [data-theme="dark"] { --color-primary: #4f98a3; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f7f6f2; color: #28251d; transition: background 0.3s, color 0.3s; }
+    [data-theme="dark"] body { background: #171614; color: #cdccca; }
+    canvas { display: block; }
+    .console { background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(1,105,111,0.4); }
+    [data-theme="dark"] .console { border-color: rgba(79,152,163,0.4); }
+    .agent-canvas { position: absolute; inset: 0; z-index: 0; }
+    section { scroll-margin-top: 80px; }
+    .card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(1,105,111,0.15);
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s;
+    }
+    [data-theme="dark"] .card {
+      background: rgba(30,28,26,0.7);
+      border-color: rgba(79,152,163,0.2);
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(1,105,111,0.12); }
+    .tag {
+      background: rgba(1,105,111,0.1);
+      color: var(--color-primary);
+      border: 1px solid rgba(1,105,111,0.2);
+    }
+    .nav-link { transition: color var(--transition-interactive); }
+    .nav-link:hover { color: var(--color-primary); }
+    .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .section-divider { height: 1px; background: linear-gradient(to right, transparent, rgba(1,105,111,0.3), transparent); }
+    .skill-bar { height: 4px; background: rgba(1,105,111,0.15); border-radius: 2px; overflow: hidden; }
+    .skill-fill { height: 100%; background: var(--color-primary); border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between" style="background: rgba(247,246,242,0.85); backdrop-filter: blur(12px);">
+    <span class="font-black text-lg tracking-tight" style="color: var(--color-primary)">VT</span>
+    <div class="hidden md:flex gap-8 text-sm font-semibold">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+    <button id="themeToggle" class="p-2 rounded-lg text-lg" style="background: rgba(1,105,111,0.1);">☀️</button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+    <canvas id="agentCanvas" class="agent-canvas"></canvas>
+
+    <div class="text-center max-w-5xl mx-auto relative z-10">
+      <div class="console w-80 md:w-96 mx-auto mb-12 rounded-xl p-6 text-green-400 font-mono text-sm opacity-0" id="console">
+        <span class="text-gray-500">venisha@agents:~$</span> whoami<br>
+        AI Implementation Specialist<br><br>
+        <span class="text-gray-500">venisha@agents:~$</span> status<br>
+        <span class="typing-cursor" id="typingText"></span>
+      </div>
+
+      <h1 class="font-black mb-4 opacity-0 translate-y-10 leading-none" id="heroName"
+          style="font-size: clamp(3.5rem, 10vw, 9rem); letter-spacing: -0.03em;">
+        VENISHA<br>TRIVEDI
+      </h1>
+      <p class="text-xl md:text-3xl mb-12 opacity-0 font-semibold" id="heroSub"
+         style="color: var(--color-primary)">
+        AI Agents &middot; Data Science '26 &middot; Ships Fast
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap opacity-0" id="ctas">
+        <a href="#projects"
+           class="px-8 py-4 text-white rounded-lg font-bold hover:scale-105 transition-all duration-300 shadow-lg"
+           style="background: var(--color-primary);">View Projects</a>
+        <a href="https://www.linkedin.com/in/venisha-trivedi" target="_blank"
+           class="px-8 py-4 rounded-lg font-bold hover:scale-105 transition-all duration-300 border-2"
+           style="border-color: var(--color-primary); color: var(--color-primary);">LinkedIn</a>
+        <a href="mailto:venisha047@gmail.com"
+           class="px-8 py-4 rounded-lg font-bold hover:scale-105 transition-all duration-300 border-2"
+           style="border-color: var(--color-primary); color: var(--color-primary);">Email Me</a>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50 animate-bounce">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <div class="section-divider mx-8"></div>
+
+  <!-- About -->
+  <section id="about" class="py-24 px-4 max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-widest mb-4" style="color: var(--color-primary)">About</p>
+        <h2 class="text-4xl md:text-5xl font-black mb-6 leading-tight">
+          I build agents that<br><em class="not-italic" style="color: var(--color-primary)">actually run.</em>
+        </h2>
+        <p class="text-lg leading-relaxed mb-6 opacity-80">
+          I work in the gap between "the model can do this" and "the workflow actually runs every day without me."
+          Right now finishing my MS in Computer Science / Data Science at Monroe University.
+        </p>
+        <p class="text-lg leading-relaxed opacity-80">
+          I focus on agent orchestration, retrieval pipelines, and prompt systems that survive contact with real users &mdash;
+          multi-agent marketing, content, and ops workflows with routing, memory, and QA gates.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card rounded-xl p-6 col-span-2">
+          <p class="text-4xl font-black mb-1" style="color: var(--color-primary)">MS</p>
+          <p class="font-semibold">Computer Science / Data Science</p>
+          <p class="text-sm opacity-60 mt-1">Monroe University · Expected 2026</p>
+        </div>
+        <div class="card rounded-xl p-6">
+          <p class="text-3xl font-black mb-1" style="color: var(--color-primary)">∞</p>
+          <p class="font-semibold text-sm">Agent Systems Built</p>
+        </div>
+        <div class="card rounded-xl p-6">
+          <p class="text-3xl font-black mb-1" style="color: var(--color-primary)">0</p>
+          <p class="font-semibold text-sm">Days waiting for prod deploys</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider mx-8"></div>
+
+  <!-- Projects -->
+  <section id="projects" class="py-24 px-4 max-w-6xl mx-auto">
+    <p class="text-sm font-bold uppercase tracking-widest mb-4" style="color: var(--color-primary)">Work</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-16 leading-tight">Projects I'd defend<br>in a code review.</h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">🤖</div>
+        <h3 class="text-xl font-black">Multi-Agent Marketing Suite</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          Orchestrated agent pipeline for automated content creation, scheduling, and performance QA.
+          Routing logic + memory layer keeps agents on-task without human babysitting.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Python</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Anthropic SDK</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Supabase</span>
+        </div>
+      </div>
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">🔍</div>
+        <h3 class="text-xl font-black">RAG Pipeline with Eval Loop</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          JSON-mode retrieval pipeline with custom chunking strategies and an automated eval loop.
+          Tracks retrieval quality over time and surfaces regressions before users notice them.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">TypeScript</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">OpenAI SDK</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Postgres</span>
+        </div>
+      </div>
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">📊</div>
+        <h3 class="text-xl font-black">Personal Finance Tracker</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          A tool I actually use daily. Ingests transactions, categorizes with LLM assistance,
+          and surfaces spending patterns without requiring manual tagging.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Next.js</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Supabase</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Tailwind</span>
+        </div>
+      </div>
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">📅</div>
+        <h3 class="text-xl font-black">Content Scheduler Agent</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          Autonomous content planning and scheduling agent. Given a topic and audience,
+          generates a content calendar, drafts posts, and queues for review.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Python</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Railway</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Cron</span>
+        </div>
+      </div>
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">🔬</div>
+        <h3 class="text-xl font-black">Research Planner</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          Personal research assistant that ingests papers, extracts structured data,
+          and maintains a knowledge graph of findings I can actually query.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Python</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Structured Gen</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Vercel</span>
+        </div>
+      </div>
+
+      <div class="card rounded-xl p-6 flex flex-col gap-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background: rgba(1,105,111,0.1)">✨</div>
+        <h3 class="text-xl font-black">Prompt System Toolkit</h3>
+        <p class="text-sm opacity-70 leading-relaxed flex-1">
+          A library of reusable prompt patterns for structured generation, role-playing agents,
+          and multi-turn reasoning that holds up in production.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">TypeScript</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">Zod</span>
+          <span class="tag text-xs px-2 py-1 rounded-md font-semibold">npm</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider mx-8"></div>
+
+  <!-- Skills -->
+  <section id="skills" class="py-24 px-4 max-w-6xl mx-auto">
+    <p class="text-sm font-bold uppercase tracking-widest mb-4" style="color: var(--color-primary)">Stack</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-16">What I reach for.</h2>
+
+    <div class="grid md:grid-cols-2 gap-x-16 gap-y-10">
+      <div>
+        <h3 class="font-black text-lg mb-6">Languages & Frameworks</h3>
+        <div class="flex flex-col gap-5">
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">Python</span><span class="text-xs opacity-50">Expert</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">TypeScript</span><span class="text-xs opacity-50">Expert</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">Next.js</span><span class="text-xs opacity-50">Proficient</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">React / R3F</span><span class="text-xs opacity-50">Proficient</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-black text-lg mb-6">AI / Infrastructure</h3>
+        <div class="flex flex-col gap-5">
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">Anthropic SDK</span><span class="text-xs opacity-50">Expert</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">OpenAI SDK</span><span class="text-xs opacity-50">Expert</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">Supabase / Postgres</span><span class="text-xs opacity-50">Proficient</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1"><span class="font-semibold text-sm">Vercel / Railway</span><span class="text-xs opacity-50">Proficient</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Agent Orchestration</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">RAG Pipelines</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Structured Generation</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Prompt Engineering</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Multi-Agent Systems</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Eval Loops</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Tailwind CSS</span>
+      <span class="tag px-4 py-2 rounded-full text-sm font-semibold">Three.js / R3F</span>
+    </div>
+  </section>
+
+  <div class="section-divider mx-8"></div>
+
+  <!-- Contact -->
+  <section id="contact" class="py-24 px-4 max-w-3xl mx-auto text-center">
+    <p class="text-sm font-bold uppercase tracking-widest mb-4" style="color: var(--color-primary)">Contact</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-6">Let's build something.</h2>
+    <p class="text-lg opacity-70 mb-12 leading-relaxed">
+      Open to internships, collaborations, and interesting agent problems.
+      If you have a workflow that needs automating, I want to hear about it.
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href="mailto:venisha047@gmail.com"
+         class="px-8 py-4 text-white rounded-lg font-bold hover:scale-105 transition-all duration-300 shadow-lg"
+         style="background: var(--color-primary);">venisha047@gmail.com</a>
+      <a href="https://www.linkedin.com/in/venisha-trivedi" target="_blank"
+         class="px-8 py-4 rounded-lg font-bold hover:scale-105 transition-all duration-300 border-2"
+         style="border-color: var(--color-primary); color: var(--color-primary);">LinkedIn</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-4 text-center text-sm opacity-40 border-t" style="border-color: rgba(1,105,111,0.15)">
+    <p>Venisha Trivedi &copy; 2026 &middot; Built with intent.</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const toggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const nav = document.querySelector('nav');
+
+    function applyTheme(dark) {
+      html.setAttribute('data-theme', dark ? 'dark' : 'light');
+      toggle.textContent = dark ? '🌙' : '☀️';
+      nav.style.background = dark ? 'rgba(23,22,20,0.85)' : 'rgba(247,246,242,0.85)';
+    }
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark);
+
+    toggle.onclick = () => {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      applyTheme(!isDark);
+    };
+
+    // Three.js Neural Particle System
+    const canvas = document.getElementById('agentCanvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const count = 600;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 3) {
+      positions[i]     = (Math.random() - 0.5) * 12;
+      positions[i + 1] = (Math.random() - 0.5) * 12;
+      positions[i + 2] = (Math.random() - 0.5) * 12;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const material = new THREE.PointsMaterial({
+      color: 0x01696f,
+      size: 0.06,
+      transparent: true,
+      opacity: 0.7,
+      sizeAttenuation: true
+    });
+    const particleSystem = new THREE.Points(geometry, material);
+    scene.add(particleSystem);
+    camera.position.z = 6;
+
+    let targetX = 0, targetY = 0;
+    document.addEventListener('mousemove', (e) => {
+      targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      particleSystem.rotation.y += (targetX * 0.5 - particleSystem.rotation.y) * 0.05;
+      particleSystem.rotation.x += (targetY * 0.3 - particleSystem.rotation.x) * 0.05;
+      particleSystem.rotation.z += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Console typing effect
+    const lines = [
+      'Building agents that automate',
+      'workflows & ship to production.'
+    ];
+    const typingEl = document.getElementById('typingText');
+    let lineIdx = 0, charIdx = 0;
+    function type() {
+      if (lineIdx >= lines.length) return;
+      const current = lines[lineIdx];
+      typingEl.textContent = lines.slice(0, lineIdx).join('\n') + (lineIdx > 0 ? '\n' : '') + current.slice(0, charIdx + 1);
+      charIdx++;
+      if (charIdx >= current.length) { lineIdx++; charIdx = 0; setTimeout(type, 400); }
+      else { setTimeout(type, 45); }
+    }
+
+    // Entrance Animations
+    window.addEventListener('load', () => {
+      const consoleEl = document.getElementById('console');
+      consoleEl.style.transition = 'opacity 1s ease, transform 1s ease';
+      consoleEl.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        consoleEl.style.opacity = '1';
+        consoleEl.style.transform = 'scale(1)';
+        setTimeout(type, 600);
+      }, 400);
+
+      const heroName = document.getElementById('heroName');
+      heroName.style.transition = 'opacity 1.2s ease, transform 1.2s ease';
+      setTimeout(() => { heroName.style.opacity = '1'; heroName.style.transform = 'translateY(0)'; }, 900);
+
+      const heroSub = document.getElementById('heroSub');
+      heroSub.style.transition = 'opacity 1s ease';
+      setTimeout(() => { heroSub.style.opacity = '1'; }, 1400);
+
+      const ctas = document.getElementById('ctas');
+      ctas.style.transition = 'opacity 1s ease';
+      setTimeout(() => { ctas.style.opacity = '1'; }, 1800);
+    });
+
+    // Skill bars — animate on scroll
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+          skillObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('#skills').forEach(el => skillObserver.observe(el));
+
+    // Card entrance on scroll
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, i * 80);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s, transform 0.25s cubic-bezier(0.16,1,0.3,1)';
+      cardObserver.observe(card);
+    });
+  </script>
+</body>
+</html>
