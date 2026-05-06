@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Venisha Trivedi · AI Agents</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/tailwind.css">
+  <script src="vendor/three.min.js"></script>
   <style>
     :root {
       --text-hero: clamp(3rem, 7vw, 8rem);
@@ -17,7 +15,7 @@
     }
     [data-theme="dark"] { --color-primary: #4f98a3; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f7f6f2; color: #28251d; transition: background 0.3s, color 0.3s; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: #f7f6f2; color: #28251d; transition: background 0.3s, color 0.3s; }
     [data-theme="dark"] body { background: #171614; color: #cdccca; }
     canvas { display: block; }
     .console { background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(1,105,111,0.4); }
