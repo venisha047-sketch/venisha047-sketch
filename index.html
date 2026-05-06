@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Venisha Trivedi · AI Agents</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/three@0.167.1/build/three.min.js"></script>
-  <script src="https://cdn.skypack.dev/gsap@3.12.5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
@@ -349,11 +348,17 @@
 
     // Three.js Neural Particle System
     const canvas = document.getElementById('agentCanvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    let particleSystem, renderer;
+
+    try {
+      const testCtx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!testCtx) throw new Error('no webgl');
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
     const count = 600;
     const positions = new Float32Array(count * 3);
@@ -371,30 +376,35 @@
       opacity: 0.7,
       sizeAttenuation: true
     });
-    const particleSystem = new THREE.Points(geometry, material);
-    scene.add(particleSystem);
-    camera.position.z = 6;
+      particleSystem = new THREE.Points(geometry, material);
+      scene.add(particleSystem);
+      camera.position.z = 6;
 
-    let targetX = 0, targetY = 0;
-    document.addEventListener('mousemove', (e) => {
-      targetX = (e.clientX / window.innerWidth) * 2 - 1;
-      targetY = -(e.clientY / window.innerHeight) * 2 + 1;
-    });
+      let targetX = 0, targetY = 0;
+      document.addEventListener('mousemove', (e) => {
+        targetX = (e.clientX / window.innerWidth) * 2 - 1;
+        targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
 
-    function animate() {
-      requestAnimationFrame(animate);
-      particleSystem.rotation.y += (targetX * 0.5 - particleSystem.rotation.y) * 0.05;
-      particleSystem.rotation.x += (targetY * 0.3 - particleSystem.rotation.x) * 0.05;
-      particleSystem.rotation.z += 0.001;
-      renderer.render(scene, camera);
+      function animate() {
+        requestAnimationFrame(animate);
+        particleSystem.rotation.y += (targetX * 0.5 - particleSystem.rotation.y) * 0.05;
+        particleSystem.rotation.x += (targetY * 0.3 - particleSystem.rotation.x) * 0.05;
+        particleSystem.rotation.z += 0.001;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+    } catch (e) {
+      // WebGL unavailable — hide canvas gracefully, page still works
+      canvas.style.display = 'none';
     }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
 
     // Console typing effect
     const lines = [
