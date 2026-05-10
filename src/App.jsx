@@ -4,10 +4,22 @@ import TheDoor from './scenes/TheDoor.jsx'
 import TheWorldOpens from './scenes/TheWorldOpens.jsx'
 import WorldMapHub from './scenes/WorldMapHub.jsx'
 import StarField from './components/StarField.jsx'
-import ZonePanel from './components/ZonePanel.jsx'
+import SkillRealm from './zones/SkillRealm.jsx'
+import BuildLab from './zones/BuildLab.jsx'
+import ResearchTower from './zones/ResearchTower.jsx'
+import AgencyFloor from './zones/AgencyFloor.jsx'
+import Playground from './zones/Playground.jsx'
+import Signal from './zones/Signal.jsx'
 import { zones } from './data/zones.js'
 
-const SCENES = ['door', 'world', 'hub']
+const ZONE_COMPONENTS = {
+  'skill-realm': SkillRealm,
+  'build-lab': BuildLab,
+  'research-tower': ResearchTower,
+  'agency-floor': AgencyFloor,
+  'playground': Playground,
+  'signal': Signal,
+}
 
 export default function App() {
   const [scene, setScene] = useState('door')
@@ -18,22 +30,34 @@ export default function App() {
     [activeZoneId],
   )
 
+  const goToZone = (id) => {
+    setActiveZoneId(id)
+    setScene('zone')
+  }
+
+  const leaveZone = () => {
+    setScene('hub')
+    setActiveZoneId(null)
+  }
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
-        if (activeZoneId) setActiveZoneId(null)
+        if (scene === 'zone') leaveZone()
         else if (scene === 'hub') setScene('world')
         else if (scene === 'world') setScene('door')
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [scene, activeZoneId])
+  }, [scene])
 
   const goNext = () => {
-    const i = SCENES.indexOf(scene)
-    if (i < SCENES.length - 1) setScene(SCENES[i + 1])
+    if (scene === 'door') setScene('world')
+    else if (scene === 'world') setScene('hub')
   }
+
+  const ZoneComponent = activeZoneId ? ZONE_COMPONENTS[activeZoneId] : null
 
   return (
     <div className="universe">
@@ -46,19 +70,19 @@ export default function App() {
           <WorldMapHub
             key="hub"
             zones={zones}
-            onZoneSelect={(id) => setActiveZoneId(id)}
+            onZoneEnter={goToZone}
           />
         )}
       </AnimatePresence>
 
-      <SceneNav scene={scene} setScene={setScene} />
+      {scene !== 'zone' && <SceneNav scene={scene} setScene={setScene} />}
 
-      <AnimatePresence>
-        {activeZone && (
-          <ZonePanel
-            key={activeZone.id}
+      <AnimatePresence mode="wait">
+        {scene === 'zone' && ZoneComponent && activeZone && (
+          <ZoneComponent
+            key={activeZoneId}
             zone={activeZone}
-            onClose={() => setActiveZoneId(null)}
+            onBack={leaveZone}
           />
         )}
       </AnimatePresence>
@@ -72,26 +96,26 @@ function SceneNav({ scene, setScene }) {
       <button
         className={scene === 'door' ? 'is-active' : ''}
         onClick={() => setScene('door')}
-        aria-label="Return to The Door"
+        aria-label="Return to Threshold"
       >
         <span className="dot" />
-        <span className="label">The Door</span>
+        <span className="label">Threshold</span>
       </button>
       <button
         className={scene === 'world' ? 'is-active' : ''}
         onClick={() => setScene('world')}
-        aria-label="Return to The World Opens"
+        aria-label="Return to The World"
       >
         <span className="dot" />
-        <span className="label">The World Opens</span>
+        <span className="label">World</span>
       </button>
       <button
         className={scene === 'hub' ? 'is-active' : ''}
         onClick={() => setScene('hub')}
-        aria-label="Open the world map hub"
+        aria-label="Open the world map"
       >
         <span className="dot" />
-        <span className="label">World Map</span>
+        <span className="label">Map</span>
       </button>
     </nav>
   )

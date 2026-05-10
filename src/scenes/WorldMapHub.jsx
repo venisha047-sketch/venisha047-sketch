@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-export default function WorldMapHub({ zones, onZoneSelect }) {
+export default function WorldMapHub({ zones, onZoneEnter }) {
   const routePath = buildRoutePath(zones)
 
   return (
@@ -24,11 +24,11 @@ export default function WorldMapHub({ zones, onZoneSelect }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.4 }}
       >
-        <div className="eyebrow">World Map · 03</div>
+        <div className="eyebrow">World Map · Six Zones</div>
         <h2 className="display">Choose your path through the universe.</h2>
         <p className="body">
-          Six zones, one connected route. Hover any node to see its name, click
-          to enter. Escape returns you to the world.
+          Six zones, one connected route. Click any waypoint to enter.
+          Escape returns you to the world.
         </p>
       </motion.div>
 
@@ -46,35 +46,25 @@ export default function WorldMapHub({ zones, onZoneSelect }) {
         <motion.div
           key={zone.id}
           className={`hub-hotspot ${i === 0 ? 'is-large' : ''}`}
-          style={{
-            left: `${zone.coords.x}%`,
-            top: `${zone.coords.y}%`,
-          }}
+          style={{ left: `${zone.coords.x}%`, top: `${zone.coords.y}%` }}
           initial={{ opacity: 0, scale: 0.4 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 1.0 + i * 0.18,
-            ease: [0.2, 0.7, 0.2, 1],
-          }}
+          transition={{ duration: 0.5, delay: 1.0 + i * 0.18, ease: [0.2, 0.7, 0.2, 1] }}
         >
           <button
             type="button"
-            onClick={() => onZoneSelect(zone.id)}
-            aria-label={`Open ${zone.title}`}
+            onClick={() => onZoneEnter(zone.id)}
+            aria-label={`Enter ${zone.title}`}
           >
             <span className="ring" />
             <span className="ring delayed" />
             <span
               className="core"
-              style={{
-                background: zone.accent,
-                boxShadow: `0 0 18px ${zone.accent}`,
-              }}
+              style={{ background: zone.accent, boxShadow: `0 0 18px ${zone.accent}` }}
             />
             <span className="label">
               <span className="num">{zone.index}</span>
-              <span className="name">{zone.title}</span>
+              <span className="name">{zone.waypoint}</span>
             </span>
           </button>
         </motion.div>
@@ -86,17 +76,19 @@ export default function WorldMapHub({ zones, onZoneSelect }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 1.6 }}
       >
-        <span className="key">Map key</span>
+        <span className="key">Waypoints</span>
         <i style={{ background: '#7CC9FF' }} />
-        <span>Knowledge</span>
+        <span>Roots</span>
         <i style={{ background: '#9DB6FF' }} />
-        <span>Creation</span>
+        <span>Forge</span>
+        <i style={{ background: '#B98AFF' }} />
+        <span>Spires</span>
         <i style={{ background: '#7CE0FF' }} />
-        <span>Collaboration</span>
+        <span>Path</span>
         <i style={{ background: '#E29CFF' }} />
-        <span>Experimentation</span>
+        <span>Wilds</span>
         <i style={{ background: '#FFD78A' }} />
-        <span>Connection</span>
+        <span>Beacon</span>
       </motion.div>
 
       <motion.div
@@ -115,9 +107,6 @@ export default function WorldMapHub({ zones, onZoneSelect }) {
 function buildRoutePath(zones) {
   if (!zones.length) return ''
   return zones
-    .map((z, i) => {
-      const cmd = i === 0 ? 'M' : 'L'
-      return `${cmd}${z.coords.x},${z.coords.y}`
-    })
+    .map((z, i) => `${i === 0 ? 'M' : 'L'}${z.coords.x},${z.coords.y}`)
     .join(' ')
 }

@@ -2,10 +2,14 @@ export const zones = [
   {
     id: 'skill-realm',
     index: '01',
+    waypoint: 'Roots',
     title: 'The Skill Realm',
-    subtitle: 'Knowledge. Tools. Approach.',
-    description:
-      'Nurture knowledge. Grow capabilities. Unlock potential. A glowing tree of TypeScript, Python, React, RAG pipelines, and multi-agent orchestration.',
+    subtitle: 'Nurture knowledge. Grow capabilities. Unlock potential.',
+    tagline: 'Nurture knowledge. Grow capabilities. Unlock potential.',
+    headline:
+      'Four disciplines walked into a tree. Marketing learned what people want. Finance learned what counts. Data learned what is true. AI learned how to build it.',
+    body: 'Most people in AI come from one direction. The roots of this tree go four ways. A bachelor\'s in marketing taught her how humans actually decide. A run as a financial analyst taught her how a number becomes a reason a business cares. A data analyst seat taught her how to find signal inside noise everyone else gives up on. A master\'s in data science is teaching her the language underneath all of it. AI did not arrive on top of those things. It threaded through them. Knowledge earned in different rooms, finally talking to itself in one place. That is what is rare here.',
+    microCopy: 'Four disciplines, one canopy. Touch a branch.',
     action: 'Inspect the realm',
     accent: '#7CC9FF',
     coords: { x: 22, y: 36 },
@@ -13,10 +17,14 @@ export const zones = [
   {
     id: 'build-lab',
     index: '02',
+    waypoint: 'Forge',
     title: 'The Build Lab',
-    subtitle: 'Design. Engineer. Prototype.',
-    description:
-      'Production projects shipped end-to-end: Marketing Department, LinkedIn Agent, Portfolio R3F, PayTrackr, BrewMuse, and the RAG Eval Loop.',
+    subtitle: 'Design. Engineer. Prototype. Iterate. Build the future.',
+    tagline: 'Design. Engineer. Prototype. Iterate. Build the future.',
+    headline:
+      'Things that work. Multi-agent systems with hierarchy. A 26-agent marketing team a founder can deploy today. An app that fixes what Excel was never built to do.',
+    body: 'This is where the four disciplines stop being a story and become infrastructure. The LinkedIn Agent System orchestrates specialized agents across research, writing, scheduling, and analytics. The Marketing Department is a 26-agent team organized into eight tiers, with a CHIEF orchestrator at the top and a GUARD QA gate at the door, ready for any founder to deploy. PayTrack is a working web app that gives freelancers and small businesses what spreadsheets never could: a tracker that knows when a client is overdue. None of these are experiments. They are built things. Walk between them. Read the case studies. Notice that the architecture explains itself.',
+    microCopy: 'Three projects. All deployable. Pick one.',
     action: 'Enter the lab',
     accent: '#9DB6FF',
     coords: { x: 70, y: 38 },
@@ -24,10 +32,14 @@ export const zones = [
   {
     id: 'research-tower',
     index: '03',
+    waypoint: 'Spires',
     title: 'The Research Tower',
-    subtitle: 'Seek truth. Decode complexity.',
-    description:
-      'RAG architecture, multi-agent system design, supply chain optimization, and AI marketing systems — written, defended, iterated.',
+    subtitle: 'Seek truth. Decode complexity. Expand the frontier of understanding.',
+    tagline: 'Seek truth. Decode complexity. Expand the frontier of understanding.',
+    headline:
+      'Beneath the builder, an analyst. Beneath the analyst, a researcher. The supply chain paper is here because the thinking has to be visible too, not only the output.',
+    body: 'A portfolio that only shows finished products is hiding something. The Research Tower is the work that came before the systems started running. Master\'s-level supply chain research lives here, methodology intact: the question, the framing, the chain of reasoning, the place where the answer was earned. This is the room where things get questioned before they get built. Where a hypothesis is tested before it becomes a workflow. Where rigor is not aesthetic but discipline. Hiring managers who know the difference between someone who can ship and someone who can think will recognize what is on these shelves.',
+    microCopy: 'The work behind the work. Read carefully.',
     action: 'Read the tower',
     accent: '#B98AFF',
     coords: { x: 26, y: 62 },
@@ -35,10 +47,14 @@ export const zones = [
   {
     id: 'agency-floor',
     index: '04',
+    waypoint: 'Path',
     title: 'The Agency Floor',
-    subtitle: 'Collaborate. Orchestrate. Deploy.',
-    description:
-      'Independent Agent Builder (2024–present). MS Computer Science at Monroe University (2024–2026). Earlier ML and data science work.',
+    subtitle: 'Collaborate. Contribute. Create impact with others.',
+    tagline: 'Collaborate. Contribute. Create impact with others.',
+    headline:
+      'Marketing taught her audiences. Finance taught her stakes. Data taught her evidence. Each role was a deliberate step, not an accident. The arc is the argument.',
+    body: 'Read it as a list and the career looks scattered. Read it as a path and it converges. The marketing role sat at the front line of how customers think. The financial analyst seat sat at the back office of what those customers cost and return. The data analyst chair sat in the middle, watching both. Then the master\'s in data science arrived to give all of it a shared vocabulary. AI is not a pivot from any of this. It is the room every prior role was secretly preparing for. Each step looked small at the time. The trajectory does not.',
+    microCopy: 'Each role was a step. Look at the line they make.',
     action: 'Open the timeline',
     accent: '#7CE0FF',
     coords: { x: 74, y: 64 },
@@ -46,10 +62,14 @@ export const zones = [
   {
     id: 'playground',
     index: '05',
+    waypoint: 'Wilds',
     title: 'The Playground',
-    subtitle: 'Experiment. Imagine. Play.',
-    description:
-      'A live ask-the-AI altar. Fire a prompt at the console and watch the system reply in character.',
+    subtitle: 'Experiment. Discover. Play at the edge of what\'s possible.',
+    tagline: 'Experiment. Discover. Play at the edge of what\'s possible.',
+    headline:
+      'Three live tools, one philosophy. Craft, then strategy, then systems. Paste a prompt. Describe a business. Name a process. The page answers in real time.',
+    body: 'Most portfolios ask for trust. This zone earns it on the spot. The Prompt Optimizer takes any prompt a visitor is using, names what is weak about it, and returns one that actually performs. The AI Use-Case Finder takes a description of a business and returns three specific implementations along with what each would take to build. The AI Workflow Architect takes any role or process and returns a complete agent workflow: what to automate, which tools to use, how to connect them, what to measure. Three tools. Craft, strategy, systems. The whole pitch, made interactive. No screenshots. The system is the proof.',
+    microCopy: 'Stop reading. Type something. Watch it answer.',
     action: 'Run an experiment',
     accent: '#E29CFF',
     coords: { x: 38, y: 84 },
@@ -57,10 +77,14 @@ export const zones = [
   {
     id: 'signal',
     index: '06',
+    waypoint: 'Beacon',
     title: 'The Signal',
-    subtitle: 'Let’s build the future together.',
-    description:
-      'venisha047@gmail.com · LinkedIn · GitHub. Send a clear signal — collaboration, hires, or research conversations.',
+    subtitle: 'Connect. Collaborate. Leave your mark.',
+    tagline: 'Connect. Collaborate. Leave your mark.',
+    headline:
+      'You walked the whole world. The signal is open on this end. Send something back and we will figure out what to build together.',
+    body: 'You have seen the four disciplines, the systems they built, the research underneath, the path it took to get here, and the tools that prove the point in real time. What happens next is up to you. If you are a founder looking for the person who can find where AI belongs in your business and actually ship it, that person just walked you through her work. If you are a hiring manager looking for an AI Implementation Specialist or Solutions Analyst fluent in marketing, finance, data, and AI at once, the resume is everything you just experienced. The beacon stays on. Send a signal. The next world gets built together.',
+    microCopy: 'The beacon is on. Reach back.',
     action: 'Send a signal',
     accent: '#FFD78A',
     coords: { x: 60, y: 84 },
