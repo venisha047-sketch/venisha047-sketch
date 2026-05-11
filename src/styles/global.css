@@ -573,6 +573,9 @@ a:hover {
   position: absolute;
   inset: 0;
   background:
+    radial-gradient(ellipse 80% 55% at 50% 40%, rgba(124, 218, 255, 0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 20% 35%, rgba(181, 140, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 75% 65%, rgba(255, 215, 138, 0.05) 0%, transparent 60%),
     linear-gradient(180deg, rgba(5, 6, 22, 0.55) 0%, rgba(5, 6, 22, 0.2) 30%, rgba(5, 6, 22, 0.7) 100%),
     url('/images/generated-image-9.jpg');
   background-size: cover;
@@ -585,7 +588,13 @@ a:hover {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(50% 35% at 50% 60%, rgba(124, 218, 255, 0.12), transparent 70%);
+    radial-gradient(50% 35% at 50% 60%, rgba(124, 218, 255, 0.14), transparent 70%),
+    radial-gradient(30% 20% at 22% 36%, rgba(181, 140, 255, 0.1), transparent 60%),
+    radial-gradient(25% 20% at 70% 38%, rgba(157, 182, 255, 0.1), transparent 60%),
+    radial-gradient(20% 20% at 26% 62%, rgba(185, 138, 255, 0.1), transparent 60%),
+    radial-gradient(20% 20% at 74% 64%, rgba(124, 224, 255, 0.1), transparent 60%),
+    radial-gradient(18% 18% at 38% 84%, rgba(226, 156, 255, 0.1), transparent 60%),
+    radial-gradient(18% 18% at 60% 84%, rgba(255, 215, 138, 0.1), transparent 60%);
 }
 
 .hub .header {
@@ -704,24 +713,25 @@ a:hover {
   position: relative;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 44px;
+  height: 44px;
 }
 
 .hub-hotspot .core {
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--cyan);
-  box-shadow: 0 0 18px rgba(124, 218, 255, 0.85);
+  box-shadow: 0 0 22px rgba(124, 218, 255, 0.9), 0 0 6px rgba(255,255,255,0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 2;
 }
 
 .hub-hotspot .ring {
   position: absolute;
-  inset: 0;
+  inset: 4px;
   border-radius: 50%;
-  border: 1px solid rgba(124, 218, 255, 0.5);
+  border: 1px solid rgba(124, 218, 255, 0.55);
   animation: pulse 2.4s ease-out infinite;
 }
 
@@ -731,18 +741,18 @@ a:hover {
 
 @keyframes pulse {
   0% { transform: scale(0.6); opacity: 0.9; }
-  100% { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(3.2); opacity: 0; }
 }
 
 .hub-hotspot .label {
   position: absolute;
-  top: 28px;
+  top: 46px;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   text-align: center;
   pointer-events: none;
-  opacity: 0;
+  opacity: 0.55;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -763,20 +773,21 @@ a:hover {
 
 .hub-hotspot .label .name {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 17px;
   color: var(--ink);
   letter-spacing: 0.01em;
+  text-shadow: 0 1px 12px rgba(5, 6, 22, 0.9);
 }
 
 .hub-hotspot:hover .core {
-  transform: scale(1.3);
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.85);
+  transform: scale(1.4);
+  box-shadow: 0 0 36px rgba(255, 255, 255, 0.9);
   background: white;
 }
 
 .hub-hotspot.is-large .core {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
 }
 
 /* ---------- Zone Panel ---------- */
@@ -960,23 +971,23 @@ a:hover {
 /* ---------- Door copy overrides ---------- */
 .door-headline {
   font-family: var(--serif);
-  font-size: clamp(18px, 1.45vw, 24px);
+  font-size: clamp(17px, 1.35vw, 22px);
   font-weight: 400;
   line-height: 1.5;
   color: var(--ink);
-  margin: 0 0 20px 0;
-  padding-left: 18px;
-  border-left: 1px solid rgba(180, 200, 255, 0.25);
+  margin: 0 0 18px 0;
+  padding-left: 16px;
+  border-left: 1px solid rgba(124, 218, 255, 0.3);
   letter-spacing: 0.005em;
 }
 
 .door-body {
-  font-size: clamp(13px, 1vw, 15px);
-  line-height: 1.65;
+  font-size: clamp(12px, 0.92vw, 14px);
+  line-height: 1.7;
   color: var(--ink-soft);
   font-weight: 300;
-  margin: 0 0 36px 0;
-  max-width: 480px;
+  margin: 0 0 32px 0;
+  max-width: 460px;
 }
 
 /* ---------- Zone Interior ---------- */
@@ -984,12 +995,26 @@ a:hover {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background:
-    radial-gradient(80% 60% at 50% 0%, rgba(var(--accent-rgb, 124 218 255) / 0.12), transparent 60%),
-    linear-gradient(180deg, #050614 0%, #080b24 100%);
+  background: linear-gradient(180deg, #050614 0%, #080b24 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.zone-interior::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, color-mix(in srgb, var(--accent, #7cdaff) 14%, transparent), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.zone-interior-back,
+.zone-interior-scroll {
+  position: relative;
+  z-index: 1;
 }
 
 .zone-interior-back {
