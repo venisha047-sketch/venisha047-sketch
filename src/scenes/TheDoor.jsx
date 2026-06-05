@@ -2,7 +2,22 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import gsap from 'gsap'
 
-export default function TheDoor({ onEnter }) {
+const sceneVariants = {
+  initial: (dir) => ({ opacity: 0, x: dir * 60, scale: 0.9 }),
+  animate: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: { duration: 0.65, ease: [0.2, 0.7, 0.2, 1] },
+  },
+  exit: (dir) => ({
+    opacity: 0,
+    x: dir * -60,
+    transition: { duration: 0.4, ease: 'easeIn' },
+  }),
+}
+
+export default function TheDoor({ onEnter, direction }) {
   const archRef = useRef(null)
   const glowRef = useRef(null)
 
@@ -46,10 +61,11 @@ export default function TheDoor({ onEnter }) {
   return (
     <motion.section
       className="scene door"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
+      custom={direction}
+      variants={sceneVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       <motion.div
         className="copy"

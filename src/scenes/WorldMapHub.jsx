@@ -1,15 +1,46 @@
 import { motion } from 'framer-motion'
 
-export default function WorldMapHub({ zones, onZoneSelect }) {
+const sceneVariants = {
+  initial: (dir) => ({ opacity: 0, x: dir * 60, scale: 0.9 }),
+  animate: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: { duration: 0.65, ease: [0.2, 0.7, 0.2, 1] },
+  },
+  exit: (dir) => ({
+    opacity: 0,
+    x: dir * -60,
+    transition: { duration: 0.4, ease: 'easeIn' },
+  }),
+}
+
+const hotspotsContainer = {
+  animate: {
+    transition: { staggerChildren: 0.15, delayChildren: 0.9 },
+  },
+}
+
+const hotspotItem = {
+  initial: { opacity: 0, scale: 0.4 },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.2, 0.7, 0.2, 1] },
+  },
+}
+
+export default function WorldMapHub({ zones, onZoneSelect, direction }) {
   const routePath = buildRoutePath(zones)
 
   return (
     <motion.section
       className="scene hub"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1 }}
+      custom={direction}
+      variants={sceneVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       <motion.div
         className="map"
@@ -42,43 +73,43 @@ export default function WorldMapHub({ zones, onZoneSelect }) {
         />
       </svg>
 
-      {zones.map((zone, i) => (
-        <motion.div
-          key={zone.id}
-          className={`hub-hotspot ${i === 0 ? 'is-large' : ''}`}
-          style={{
-            left: `${zone.coords.x}%`,
-            top: `${zone.coords.y}%`,
-          }}
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 1.0 + i * 0.18,
-            ease: [0.2, 0.7, 0.2, 1],
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => onZoneSelect(zone.id)}
-            aria-label={`Open ${zone.title}`}
+      <motion.div
+        style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+        variants={hotspotsContainer}
+      >
+        {zones.map((zone, i) => (
+          <motion.div
+            key={zone.id}
+            className={`hub-hotspot ${i === 0 ? 'is-large' : ''}`}
+            style={{
+              left: `${zone.coords.x}%`,
+              top: `${zone.coords.y}%`,
+              pointerEvents: 'auto',
+            }}
+            variants={hotspotItem}
           >
-            <span className="ring" />
-            <span className="ring delayed" />
-            <span
-              className="core"
-              style={{
-                background: zone.accent,
-                boxShadow: `0 0 18px ${zone.accent}`,
-              }}
-            />
-            <span className="label">
-              <span className="num">{zone.index}</span>
-              <span className="name">{zone.title}</span>
-            </span>
-          </button>
-        </motion.div>
-      ))}
+            <button
+              type="button"
+              onClick={() => onZoneSelect(zone.id)}
+              aria-label={`Open ${zone.title}`}
+            >
+              <span className="ring" />
+              <span className="ring delayed" />
+              <span
+                className="core"
+                style={{
+                  background: zone.accent,
+                  boxShadow: `0 0 18px ${zone.accent}`,
+                }}
+              />
+              <span className="label">
+                <span className="num">{zone.index}</span>
+                <span className="name">{zone.title}</span>
+              </span>
+            </button>
+          </motion.div>
+        ))}
+      </motion.div>
 
       <motion.div
         className="legend"
