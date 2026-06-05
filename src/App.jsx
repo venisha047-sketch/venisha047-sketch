@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import TheDoor from './scenes/TheDoor.jsx'
 import TheWorldOpens from './scenes/TheWorldOpens.jsx'
@@ -11,7 +11,6 @@ const SCENES = ['door', 'world', 'hub']
 
 export default function App() {
   const [scene, setScene] = useState('door')
-  const [direction, setDirection] = useState(1)
   const [activeZoneId, setActiveZoneId] = useState(null)
 
   const activeZone = useMemo(
@@ -19,55 +18,40 @@ export default function App() {
     [activeZoneId],
   )
 
-  const navigateTo = useCallback(
-    (nextScene) => {
-      const cur = SCENES.indexOf(scene)
-      const next = SCENES.indexOf(nextScene)
-      setDirection(next >= cur ? 1 : -1)
-      setScene(nextScene)
-    },
-    [scene],
-  )
-
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
         if (activeZoneId) setActiveZoneId(null)
-        else if (scene === 'hub') navigateTo('world')
-        else if (scene === 'world') navigateTo('door')
+        else if (scene === 'hub') setScene('world')
+        else if (scene === 'world') setScene('door')
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [scene, activeZoneId, navigateTo])
+  }, [scene, activeZoneId])
 
   const goNext = () => {
     const i = SCENES.indexOf(scene)
-    if (i < SCENES.length - 1) navigateTo(SCENES[i + 1])
+    if (i < SCENES.length - 1) setScene(SCENES[i + 1])
   }
 
   return (
     <div className="universe">
       <StarField />
 
-      <AnimatePresence mode="wait" custom={direction}>
-        {scene === 'door' && (
-          <TheDoor key="door" direction={direction} onEnter={goNext} />
-        )}
-        {scene === 'world' && (
-          <TheWorldOpens key="world" direction={direction} onContinue={goNext} />
-        )}
+      <AnimatePresence mode="wait">
+        {scene === 'door' && <TheDoor key="door" onEnter={goNext} />}
+        {scene === 'world' && <TheWorldOpens key="world" onContinue={goNext} />}
         {scene === 'hub' && (
           <WorldMapHub
             key="hub"
-            direction={direction}
             zones={zones}
             onZoneSelect={(id) => setActiveZoneId(id)}
           />
         )}
       </AnimatePresence>
 
-      <SceneNav scene={scene} navigateTo={navigateTo} />
+      <SceneNav scene={scene} setScene={setScene} />
 
       <AnimatePresence>
         {activeZone && (
@@ -82,12 +66,12 @@ export default function App() {
   )
 }
 
-function SceneNav({ scene, navigateTo }) {
+function SceneNav({ scene, setScene }) {
   return (
     <nav className="scene-nav" aria-label="Universe navigation">
       <button
         className={scene === 'door' ? 'is-active' : ''}
-        onClick={() => navigateTo('door')}
+        onClick={() => setScene('door')}
         aria-label="Return to The Door"
       >
         <span className="dot" />
@@ -95,7 +79,7 @@ function SceneNav({ scene, navigateTo }) {
       </button>
       <button
         className={scene === 'world' ? 'is-active' : ''}
-        onClick={() => navigateTo('world')}
+        onClick={() => setScene('world')}
         aria-label="Return to The World Opens"
       >
         <span className="dot" />
@@ -103,7 +87,7 @@ function SceneNav({ scene, navigateTo }) {
       </button>
       <button
         className={scene === 'hub' ? 'is-active' : ''}
-        onClick={() => navigateTo('hub')}
+        onClick={() => setScene('hub')}
         aria-label="Open the world map hub"
       >
         <span className="dot" />

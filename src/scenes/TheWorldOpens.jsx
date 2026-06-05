@@ -9,41 +9,14 @@ const ZONE_LABELS = [
   'Signal',
 ]
 
-const sceneVariants = {
-  initial: (dir) => ({ opacity: 0, x: dir * 60, scale: 0.9 }),
-  animate: {
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    transition: { duration: 0.65, ease: [0.2, 0.7, 0.2, 1] },
-  },
-  exit: (dir) => ({
-    opacity: 0,
-    x: dir * -60,
-    transition: { duration: 0.4, ease: 'easeIn' },
-  }),
-}
-
-const staggerContainer = {
-  animate: {
-    transition: { staggerChildren: 0.15, delayChildren: 1.2 },
-  },
-}
-
-const staggerItem = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.2, 0.7, 0.2, 1] } },
-}
-
-export default function TheWorldOpens({ onContinue, direction }) {
+export default function TheWorldOpens({ onContinue }) {
   return (
     <motion.section
       className="scene world"
-      custom={direction}
-      variants={sceneVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1 }}
     >
       <motion.div
         className="horizon"
@@ -73,10 +46,12 @@ export default function TheWorldOpens({ onContinue, direction }) {
 
       <motion.div
         className="six-zones"
-        variants={staggerContainer}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.4 }}
       >
         {ZONE_LABELS.map((z) => (
-          <motion.span key={z} variants={staggerItem}>{z}</motion.span>
+          <span key={z}>{z}</span>
         ))}
       </motion.div>
 
